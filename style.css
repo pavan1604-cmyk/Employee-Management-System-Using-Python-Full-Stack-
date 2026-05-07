@@ -1,0 +1,62 @@
+body {
+    background: linear-gradient(-45deg, #141e30, #243b55, #0f2027, #2c5364);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.main-title {
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.premium-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.premium-input {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    transition: 0.3s;
+}
+
+.premium-input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 10px #00f2ff;
+    transform: scale(1.05);
+}
+
+.premium-btn {
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+.premium-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+}
+
+.stagger-row {
+    transition: 0.3s;
+}
+
+.stagger-row:hover {
+    transform: scale(1.03);
+    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Management</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container py-4">
+
+        <h2 class="text-center text-light mb-4 main-title" data-aos="zoom-in">
+            <i class="bi bi-people-fill"></i> Employee Management System
+        </h2>
+
+        <!-- FORM -->
+        <div class="card premium-card p-4 mb-4" data-aos="fade-up">
+
+            <form method="POST" id="empForm" class="row g-3">
+
+                {% set fields = ["Department","Name","Designation","Email","Address"] %} {% for field in fields %}
+                <div class="col-md-3">
+                    <input type="text" name="{{field}}" class="form-control premium-input" placeholder="{{field}}" required>
+                </div>
+                {% endfor %}
+
+                <div class="col-md-3">
+                    <select name="Married_status" class="form-select premium-input" required>
+                    <option value="">Married Status</option>
+                    <option>Single</option>
+                    <option>Married</option>
+                </select>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="DOB" class="form-control premium-input" placeholder="DOB" required>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="DOJ" class="form-control premium-input" placeholder="DOJ" required>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="id_proof_type" class="form-control premium-input" placeholder="ID Proof Type" required>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="id_proof" class="form-control premium-input" placeholder="ID Proof Number" required>
+                </div>
+
+                <div class="col-md-3">
+                    <select name="Gender" class="form-select premium-input" required>
+                    <option value="">Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="Phone" class="form-control premium-input" placeholder="Phone" required>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="Country" class="form-control premium-input" placeholder="Country" required>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="Salary" class="form-control premium-input" placeholder="Salary" required>
+                </div>
+
+                <div class="col-12 text-center mt-3">
+                    <button formaction="/add" class="btn premium-btn btn-success me-2 ripple">
+                    <i class="bi bi-plus-circle"></i> Add
+                </button>
+
+                    <button formaction="/update" class="btn premium-btn btn-warning me-2 ripple">
+                    <i class="bi bi-pencil-square"></i> Update
+                </button>
+
+                    <button type="button" onclick="clearForm()" class="btn premium-btn btn-secondary ripple">
+                    <i class="bi bi-x-circle"></i> Clear
+                </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="card premium-card p-3 mb-4" data-aos="fade-right">
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control premium-input" placeholder="Search by Name...">
+                <button class="btn btn-primary premium-btn ripple" onclick="searchEmployee()">
+                <i class="bi bi-search"></i> Search
+            </button>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-responsive" data-aos="fade-up">
+            <table class="table table-dark table-hover text-center align-middle rounded-4 overflow-hidden shadow-lg" id="employeeTable">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Married</th>
+                        <th>DOB</th>
+                        <th>DOJ</th>
+                        <th>ID Type</th>
+                        <th>ID Proof</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Country</th>
+                        <th>Salary</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emp in employees %}
+                    <tr onclick="fillForm(this)" class="stagger-row">
+                        {% for item in emp %}
+                        <td>{{ item }}</td>
+                        {% endfor %}
+                        <td>
+                            <a href="/delete/{{ emp[9] }}" class="btn btn-danger btn-sm ripple">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000
+        });
+    </script>
+
+    <script>
+        function fillForm(row) {
+            let cells = row.getElementsByTagName("td");
+            let inputs = document.querySelectorAll("#empForm input, #empForm select");
+            for (let i = 0; i < 14; i++) {
+                inputs[i].value = cells[i].innerText;
+            }
+        }
+
+        function clearForm() {
+            document.getElementById("empForm").reset();
+        }
+
+        function searchEmployee() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.querySelectorAll("#employeeTable tbody tr");
+
+            rows.forEach(row => {
+                row.style.transition = "0.4s";
+                let name = row.cells[1].innerText.toLowerCase();
+                row.style.display = name.includes(input) ? "" : "none";
+            });
+        }
+    </script>
+
+</body>
+
+</html>
